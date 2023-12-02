@@ -1,0 +1,143 @@
+import random
+
+# HANGMAN GRAPHICS
+# List of ascii art images representing hangman stages
+HANGMAN_PICS = ["""
+    +---+
+        |
+        |
+        |
+        |
+       ===""",
+       
+    """
+    +---+
+    0   |
+        |
+        |
+        |
+       ===""",
+       
+    """
+    +---+
+    0   |
+    |   |
+        |
+        |
+       ===""",
+
+    """
+    +---+
+    0   |
+   /|   |
+        |
+        |
+       ===""",
+
+    """
+    +---+
+    0   |
+   /|\  |
+        |
+        |
+       ===""",
+       
+    """
+    +---+
+    0   |
+   /|\  |
+    |   |
+        |
+       ===""",
+    
+    """
+    +---+
+    0   |
+   /|\  |
+    |   |
+   /    |
+       ===""",
+
+    """
+    +---+
+    0   |
+   /|\  |
+    |   |
+   / \  |
+       ==="""
+]
+
+# WORDS LIST
+# List of words to select random secret word from
+WORDS = ["python", "computer", "programming", "hangman", "java", "javascript", "html", "css", "pythonic"]
+
+# Prints hangman graphic based on wrong guesses
+def draw_hangman(wrong_guesses):
+    pic_index = len(wrong_guesses)
+    print(HANGMAN_PICS[pic_index])
+
+# Randomly selects secret word
+def random_word(words):
+    return random.choice(words)
+
+# Gets player's guess and validates input
+def get_valid_guess(wrong_guesses):
+    while True:
+        guess = input("Guess: ").lower()
+        if len(guess) != 1 or not guess.isalpha() or guess in wrong_guesses:
+            print("Invalid guess!")
+        else:
+            return guess
+
+# Update revealed letter slots
+def update_revealed_letters(guess, word, revealed):
+    updated = ""
+    for i in range(len(word)):
+        if guess == word[i]:
+            updated += guess
+        else:
+            updated += revealed[i]
+    return updated
+
+# Game over handlers
+def display_win(word):
+    # Print win game message
+    print("You win! The word was", word)
+
+def display_loss(word):
+    # Print lose game message
+    print("You lose! The hangman is finished. The word was", word)
+
+# Main game logic handler
+def main():
+    word = random_word(WORDS)
+    revealed = "_" * len(word)
+    wrong_guesses = []
+    max_attempts = len(HANGMAN_PICS)
+    attempts_left = max_attempts
+
+    while True:
+        draw_hangman(wrong_guesses)
+        print("Word:", " ".join(revealed))
+        print("Attempts Left:", attempts_left)
+
+        guess = get_valid_guess(wrong_guesses)
+
+        if guess in word:
+            revealed = update_revealed_letters(guess, word, revealed)
+        else:
+            wrong_guesses.append(guess)
+            attempts_left -= 1
+
+        if attempts_left == 0:
+            draw_hangman(wrong_guesses)
+            display_loss(word)
+            break
+
+        if "_" not in revealed:
+            draw_hangman(wrong_guesses)
+            display_win(word)
+            break
+
+if __name__ == "__main__":
+    main()
