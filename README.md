@@ -41,7 +41,7 @@ Expanding the Game:
 
 - Add difficulty levels with different 
   word lists
-- Allow player to choose/enter category   for words
+- Allow player to choose/enter category for words
 - Add ability to save and display player 
   statistics
 - Support multiplayer via local hot seat 
